@@ -1,0 +1,32 @@
+# Start by making sure you know where your fastq files are
+
+find ~/ -name "*.fastq.gz"
+
+# Create project structure
+mkdir -p ~/data/rnaseq_project/{raw,trimmed,quant_mouse,fastqc_out,results,ref}
+  # I had to run the following to copy the data into the correct directory (HGC folder on the hard drive to the raw folder in the cluster)
+  cp /home/award01/data/my_data/HGC20250306005-0423_raw/*_R*.fastq.gz ~/data/rnaseq_project/raw/
+
+# Make output folder for FastQC
+proj=~/data/rnaseq_project
+mkdir -p $proj/fastqc_out
+
+# Download module from software installation on the Koch bioinformatics site
+module load fastqc
+
+# The following is for paired-end fastq files
+srun --pty --mem=4G -c 4 bash
+
+proj=~/data/rnaseq_project
+
+for f in $proj/raw/*_R1_001.fastq.gz; do
+    samp=$(basename $f _R1_001.fastq.gz)
+    fastqc -t 4 $proj/raw/${samp}_R1_001.fastq.gz \
+                $proj/raw/${samp}_R2_001.fastq.gz \
+                -o $proj/fastqc_out &
+done
+wait
+
+
+
+
