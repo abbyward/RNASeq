@@ -1,0 +1,10 @@
+# Since the files are huge, it's important to get access to the Luria Linux cluster (super easy just email luria-help@mit.edu)
+ssh {kerberos id}@luria.mit.edu
+  #enter your laptop password
+
+# Most of the work should be done in a computing node, so run the following 
+srun --pty --mem=4G -c 4 bash
+
+# Then copy the raw data from a hard drive; the first part should be the pathfile of the drive, the second the new directory in the cluster
+scp -r "/Volumes/One Touch/my_data" award01@luria.mit.edu:/home/award01/data
+
